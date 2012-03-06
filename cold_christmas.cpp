@@ -316,8 +316,8 @@ namespace CC
 				{
 					int M = lcm(it->n, it2->n);
 
-					list<int> sol1 = linear_congruence(congruent_equation(it->a, it->b, it->n));
-					list<int> sol2 = linear_congruence(congruent_equation(it2->a, it2->b, it2->n));
+					list<int> sol1 = linear_congruence(*it);
+					list<int> sol2 = linear_congruence(*it2);
 					list<int> temp;
 
 					for(int i = 1; i < M / it->n; i++) // i : 1 to 3-1=2
@@ -328,7 +328,7 @@ namespace CC
 					sol1.splice(sol1.end(), temp);
 					temp.clear();
 
-					for(int i = 1; i < N / it2->n; i++)
+					for(int i = 1; i < M / it2->n; i++)
 					{
 						for(list<int>::iterator j = sol2.begin(); j != sol2.end(); j++)
 							temp.push_back(*j + it2->n * i);
@@ -342,7 +342,7 @@ namespace CC
 						{
 							if(*i == *j)
 							{
-								*it = congruent_equation(1, *i, N);
+								*it = congruent_equation(1, *i, M);
 								list<congruent_equation>::iterator t = it2;
 								it2++;
 								eqs.erase(t);
@@ -357,7 +357,7 @@ namespace CC
 						return 0;
 					}
 				}
-				it2++;
+//				it2++;
 			}
 		}
 
@@ -374,7 +374,10 @@ namespace CC
 
 		for(list<congruent_equation>::iterator it = eqs.begin(); it != eqs.end(); it++)
 		{
-			ret += linear_congruence(congruent_equation(N / it->n, it->b, it->n)).front() * N / it->n; 	
+			list<int> t = linear_congruence(congruent_equation(it->a, it->b, it->n));
+			int s = N / it->n;
+			int u = inverse(N / it->n, it-> n);
+			ret += t.front() * s * u;
 		}
 
 		return ret % N;
